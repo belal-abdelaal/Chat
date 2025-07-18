@@ -16,7 +16,7 @@ class UserService
 
     public function validate(UserSignupRequest $request)
     {
-        $data = $request->only(['name', 'email', 'passwrd', 'gender']);
+        $data = $request->validated();
         return $data;
     }
 
