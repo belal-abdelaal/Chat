@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(UserController::class)->group(function () {
     Route::post('/user', 'create');
+    Route::post('/login', 'login');
+    Route::post('/user', 'get');
 });
 
 Route::get('/factory', function () {
