@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace Modules\User\app\Services;
 
-use App\Http\Requests\UserLoginRequest;
-use App\Http\Requests\UserSignupRequest;
-use App\Repositories\UserRepository;
+use Modules\User\app\Http\Requests\UserLoginRequest;
+use Modules\User\app\Http\Requests\UserSignupRequest;
+use Modules\User\app\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 

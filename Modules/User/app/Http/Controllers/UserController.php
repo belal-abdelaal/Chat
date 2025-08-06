@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\User\app\Http\Controllers;
 
-use App\Http\Requests\UserLoginRequest;
-use App\Http\Requests\UserSignupRequest;
-use App\Services\UserService;
-use Illuminate\Http\Request;
+use Modules\User\app\Http\Requests\UserLoginRequest;
+use Modules\User\app\Http\Requests\UserSignupRequest;
+use Modules\User\app\Services\UserService;
+use App\Http\Controllers\Controller;
+
 
 class UserController extends Controller
 {
