@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\User\app\Http\Controllers\UserController;
-use Modules\User\app\Models\User;
+use Modules\User\Http\Controllers\UserController;
+use Modules\User\Models\User;
 
 Route::controller(UserController::class)->group(function () {
     Route::post('/user', 'create');

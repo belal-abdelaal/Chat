@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\User\app\Http\Controllers;
+namespace Modules\User\Http\Controllers;
 
-use Modules\User\app\Http\Requests\UserLoginRequest;
-use Modules\User\app\Http\Requests\UserSignupRequest;
-use Modules\User\app\Services\UserService;
+use Modules\User\Http\Requests\UserLoginRequest;
+use Modules\User\Http\Requests\UserSignupRequest;
+use Modules\User\Services\UserService;
 use App\Http\Controllers\Controller;
 
 

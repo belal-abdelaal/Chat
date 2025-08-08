@@ -1,12 +1,11 @@
 <?php
 
-namespace Modules\User\app\Services;
+namespace Modules\User\Services;
 
-use Modules\User\app\Http\Requests\UserLoginRequest;
-use Modules\User\app\Http\Requests\UserSignupRequest;
-use Modules\User\app\Repositories\UserRepository;
+use Modules\User\Http\Requests\UserLoginRequest;
+use Modules\User\Http\Requests\UserSignupRequest;
+use Modules\User\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class UserService
 {
@@ -35,7 +34,7 @@ class UserService
     {
         if (!$this->userRepo->isUniqueEmail($data['email'])) {
             $user = $this->userRepo->findUserByEmail($data['email']);
-            if (!Hash::check($data['password'], $user->password)) 
+            if (!Hash::check($data['password'], $user->password))
                 return null;
             return $this->userRepo->issueToken($user);
         }
