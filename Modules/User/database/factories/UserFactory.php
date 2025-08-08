@@ -4,15 +4,13 @@ namespace Modules\User\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Modules\User\Models\User;
 
 class UserFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      */
-    protected $model = User::class;
-    protected static ?string $password;
+    protected $model = \Modules\User\Models\User::class;
 
     /**
      * Define the model's default state.
@@ -22,8 +20,7 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'password' => static::$password ??= Hash::make('password'),
-            'gender' => fake()->randomElement(['male', 'female']),
+            'password' => Hash::make('password')
         ];
     }
 }
