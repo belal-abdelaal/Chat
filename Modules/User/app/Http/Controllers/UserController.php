@@ -19,6 +19,12 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
+    /**
+     * Register a new user.
+     *
+     * @param UserSignupRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function create(UserSignupRequest $request)
     {
         $data = $this->userService->validate($request);
@@ -27,6 +33,13 @@ class UserController extends Controller
         }
         return response()->json(["message" => "Email already exists"], 422);
     }
+
+    /**
+     * Authenticate a user and issue a token.
+     *
+     * @param UserLoginRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(UserLoginRequest $request)
     {
         $data = $this->userService->validate($request);
@@ -34,6 +47,13 @@ class UserController extends Controller
             return response()->json(["token" => $token->plainTextToken]);
         return response()->json(["message" => "Invalid email or password"]);
     }
+
+    /**
+     * Get the authenticated user from the token.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function get(Request $request)
     {
         if (!$user = $this->userService->parseToken($request->header("token"))) {
