@@ -6,7 +6,9 @@ use Modules\User\Http\Requests\UserLoginRequest;
 use Modules\User\Http\Requests\UserSignupRequest;
 use Modules\User\Services\UserService;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Http\Request;
+use Modules\User\Models\User;
+use Modules\User\Transformers\UserResource;
 
 class UserController extends Controller
 {
@@ -31,5 +33,14 @@ class UserController extends Controller
         if ($token = $this->userService->login($data))
             return response()->json(["token" => $token->plainTextToken]);
         return response()->json(["message" => "Invalid email or password"]);
+    }
+    public function get(Request $request)
+    {
+        if (!$user = $this->userService->parseToken($request->header("token"))) {
+            return response()->json([
+                "message" => "Invalid or expired token"
+            ], 401);
+        }
+        return response()->json(new UserResource($user));
     }
 }

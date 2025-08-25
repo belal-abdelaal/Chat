@@ -6,6 +6,7 @@ use Modules\User\Http\Requests\UserLoginRequest;
 use Modules\User\Http\Requests\UserSignupRequest;
 use Modules\User\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserService
 {
@@ -20,6 +21,15 @@ class UserService
     {
         $data = $request->validated();
         return $data;
+    }
+
+
+    public function parseToken($token)
+    {
+        if (!$this->userRepo->isValidToken($token))
+            return null;
+        $token = PersonalAccessToken::findToken($token);
+        return $token->tokenable;
     }
 
     public function create($data)

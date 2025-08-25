@@ -2,6 +2,7 @@
 
 namespace Modules\User\Repositories;
 
+use Laravel\Sanctum\PersonalAccessToken;
 use Modules\User\Models\User;
 
 class UserRepository
@@ -23,9 +24,21 @@ class UserRepository
         return User::where('email', $email)->first();
     }
 
+    public function findUserById($id)
+    {
+        return User::where('id', $id)->first();
+    }
+
     public function issueToken(User $user, $abilities = [])
     {
         return $user->createToken($user->name . '\'s_token', $abilities, now()->addWeek());
+    }
+
+    public function isValidToken($token): null|string
+    {
+        if (empty($token) || !PersonalAccessToken::findToken($token))
+            return null;
+        return $token;
     }
 
     public function createUser($data)

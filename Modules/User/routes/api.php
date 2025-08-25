@@ -1,7 +1,10 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\PersonalAccessToken;
 use Modules\User\Http\Controllers\UserController;
+use Modules\User\Http\Middleware\ValidateToken;
 use Modules\User\Models\User;
 
 Route::prefix('/user')->controller(UserController::class)->group(function () {
