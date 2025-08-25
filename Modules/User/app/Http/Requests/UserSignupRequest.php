@@ -25,8 +25,7 @@ class UserSignupRequest extends FormRequest
         return [
             "name" => "required|string|min:8|max:255",
             "email" => "required|email|max:255",
-            "password" => "required|min:8|max:255",
-            "gender" => ["required", Rule::in(['male', 'female'])]
+            "password" => "required|min:8|max:255"
         ];
     }
 }
