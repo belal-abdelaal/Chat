@@ -7,7 +7,7 @@ use Modules\User\Http\Requests\UserSignupRequest;
 use Modules\User\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Modules\User\Models\User;
+use Modules\User\Http\Requests\UserUpdateRequest;
 use Modules\User\Transformers\UserResource;
 
 class UserController extends Controller
@@ -23,7 +23,7 @@ class UserController extends Controller
      * Register a new user.
      *
      * @param UserSignupRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory
      */
     public function create(UserSignupRequest $request)
     {
@@ -38,7 +38,7 @@ class UserController extends Controller
      * Authenticate a user and issue a token.
      *
      * @param UserLoginRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory
      */
     public function login(UserLoginRequest $request)
     {
@@ -52,7 +52,7 @@ class UserController extends Controller
      * Get the authenticated user from the token.
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\Routing\ResponseFactory
      */
     public function get(Request $request)
     {
@@ -62,5 +62,28 @@ class UserController extends Controller
             ], 401);
         }
         return response()->json(new UserResource($user));
+    }
+
+    /**
+     * Responsible for updating accound data
+     * @param UserUpdateRequest $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory
+     */
+    public function update(UserUpdateRequest $request)
+    {
+        $newData = $this->userService->validate($request);
+        $updatedUser = $this->userService->update(
+            $newData,
+            $this->userService->parseToken($request->header("token"))
+        );
+        if ($updatedUser)
+            return response()->json([
+                "message" => "Account updated successfuly",
+                "user" => new UserResource($updatedUser)
+            ]);
+        else if ($updatedUser == null)
+            return response()->json(["message" => "Empty request !"], 422);
+        else
+            return response()->json(["message" => "Internal server error !"], 500);
     }
 }

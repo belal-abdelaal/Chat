@@ -4,9 +4,12 @@ namespace Modules\User\Services;
 
 use Modules\User\Http\Requests\UserLoginRequest;
 use Modules\User\Http\Requests\UserSignupRequest;
+use Modules\User\Http\Requests\UserUpdateRequest;
 use Modules\User\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Database\QueryException;
+use Modules\User\Models\User;
 
 /**
  * Class UserService
@@ -33,27 +36,25 @@ class UserService
     /**
      * Validate signup or login request data.
      *
-     * @param UserSignupRequest|UserLoginRequest $request
+     * @param UserSignupRequest|UserLoginRequest|UserUpdateRequest $request
      * @return array Validated request data
      */
-    public function validate(UserSignupRequest|UserLoginRequest $request)
+    public function validate(UserSignupRequest|UserLoginRequest|UserUpdateRequest $request)
     {
         $data = $request->validated();
-        return $data;
+        return $data ? $data : null;
     }
 
     /**
      * Parse a personal access token and return the corresponding user.
      *
      * @param string $token
-     * @return mixed|null The authenticated user or null if invalid
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo 
      */
     public function parseToken($token)
     {
-        if (!$this->userRepo->isValidToken($token))
-            return null;
         $token = PersonalAccessToken::findToken($token);
-        return $token->tokenable;
+        return $token->tokenable();
     }
 
     /**
@@ -85,5 +86,25 @@ class UserService
             return $this->userRepo->issueToken($user);
         }
         return null;
+    }
+
+    /**
+     * Attend to update a user and return a User ORM instance, QueryException 
+     * if an error accoured, or null if the provided data is empty
+     * @param array|null $data The replacement data for the account's old data
+     * @param User $user The user being updated
+     * @return User|QueryException|null 
+     */
+    public function update(array|null $data, $user): User|QueryException|null
+    {
+        if ($data)
+            try {
+                $user->update($data);
+                return $user;
+            } catch (QueryException $e) {
+                return $e;
+            }
+        else
+            return null;
     }
 }
